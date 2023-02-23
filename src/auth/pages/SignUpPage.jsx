@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { signUp } from '../apis';
 
 export default function SignUpPage() {
+  // const [onChangehandler,value] = useForm(); // custom hook 처리(준석님) => 후순위
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // const [form, setForm] = useState({ email: '', password: '' });
   const [isEmailValid, setIsEmailValid] = useState();
   const [isPasswordValid, setIsPasswordValid] = useState();
+  // const [isFormValid, setIsFormValid] = useState({ email: false, password: false });
+
+  const emailInputRef = useRef();
 
   const canSubmit = isEmailValid && isPasswordValid;
 
@@ -40,6 +46,10 @@ export default function SignUpPage() {
     }
   }
 
+  useEffect(() => {
+    emailInputRef.current?.focus();
+  }, []);
+
   return (
     <>
       <h1>회원가입</h1>
@@ -48,6 +58,7 @@ export default function SignUpPage() {
         <input
           id="email"
           type="text"
+          ref={emailInputRef}
           value={email}
           onChange={handleEmailInput}
           data-testid="email-input"

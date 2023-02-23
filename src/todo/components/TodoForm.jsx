@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { createTodo } from '../apis';
 import { TODO_ACTION } from '../constants';
@@ -24,6 +24,10 @@ export default function TodoForm() {
       alert(error.message);
     }
   }
+
+  useEffect(() => {
+    todoInputRef.current?.focus();
+  }, []);
 
   return (
     <form onSubmit={handleSubmit}>

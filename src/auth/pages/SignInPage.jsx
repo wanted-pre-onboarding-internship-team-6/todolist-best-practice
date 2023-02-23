@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { signIn } from '../apis';
@@ -6,6 +6,7 @@ import { AUTH_ACTION } from '../constants';
 import { useAuth } from '../hooks';
 
 export default function SignInPage() {
+  // useForm => 준석님
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState();
@@ -13,6 +14,8 @@ export default function SignInPage() {
   const [, dispatch] = useAuth();
 
   const canSubmit = isEmailValid && isPasswordValid;
+
+  const emailInputRef = useRef();
 
   function handleEmailInput({ target: { value } }) {
     const emailPattern = /@/;
@@ -42,6 +45,10 @@ export default function SignInPage() {
     }
   }
 
+  useEffect(() => {
+    emailInputRef.current?.focus();
+  }, []);
+
   return (
     <>
       <h1>로그인</h1>
@@ -50,6 +57,7 @@ export default function SignInPage() {
         <input
           id="email"
           type="text"
+          ref={emailInputRef}
           value={email}
           onChange={handleEmailInput}
           data-testid="email-input"
