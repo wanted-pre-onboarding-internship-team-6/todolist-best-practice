@@ -6,7 +6,7 @@ export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 export function TodoProvider({ children }) {
-  const [state, dispatch] = useReducer(todoReducer, []);
+  const [state, dispatch] = useReducer(todoReducer, null);
 
   return (
     <TodoStateContext.Provider value={state}>
