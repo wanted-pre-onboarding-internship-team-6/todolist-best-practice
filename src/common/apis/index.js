@@ -17,9 +17,4 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-api.interceptors.response.use(
-  response => ({ isSuccess: true, data: response.data }),
-  error => ({ isSuccess: false, error: error.response.data })
-);
-
 export default api;
