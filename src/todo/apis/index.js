@@ -8,7 +8,7 @@ export async function createTodo(todo) {
   return await api.post('/todos', { todo });
 }
 
-export async function updateTodo(id, todo, isCompleted) {
+export async function updateTodo({ id, todo, isCompleted }) {
   return await api.put(`/todos/${id}`, { todo, isCompleted });
 }
 
