@@ -1,49 +1,38 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
+import { useMutation } from '../../../common/hooks';
 import { signUp } from '../../apis';
+import { useAuthForm } from '../../hooks';
 import * as S from './styles';
 
 export default function SignUpPage() {
-  // const [onChangehandler,value] = useForm(); // custom hook 처리(준석님) => 후순위
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  // const [form, setForm] = useState({ email: '', password: '' });
-  const [isEmailValid, setIsEmailValid] = useState();
-  const [isPasswordValid, setIsPasswordValid] = useState();
-  // const [isFormValid, setIsFormValid] = useState({ email: false, password: false });
+  const {
+    email,
+    password,
+    isEmailValid,
+    isPasswordValid,
+    handleEmailInput,
+    handlePasswordInput,
+    canSubmit,
+  } = useAuthForm();
 
   const emailInputRef = useRef();
-
-  const canSubmit = isEmailValid && isPasswordValid;
-
   const navigate = useNavigate();
 
-  function handleEmailInput({ target: { value } }) {
-    const emailPattern = /@/;
-    const isEmailValid = emailPattern.test(value);
-
-    setEmail(value);
-    setIsEmailValid(isEmailValid);
-  }
-
-  function handlePasswordInput({ target: { value } }) {
-    const isPasswordValid = value.length >= 8;
-
-    setPassword(value);
-    setIsPasswordValid(isPasswordValid);
-  }
+  const { mutate, isLoading } = useMutation(signUp, {
+    onSuccess: () => {
+      alert('가입되었습니다.');
+      navigate('/signin');
+    },
+    onError: error => {
+      console.error(error);
+    },
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const { isSuccess, error } = await signUp(email, password);
-    if (isSuccess) {
-      alert('가입되었습니다.');
-      navigate('/signin');
-    } else if (error) {
-      alert(error.message);
-    }
+    mutate(email, password);
   }
 
   useEffect(() => {
@@ -76,7 +65,7 @@ export default function SignUpPage() {
         {isPasswordValid === false && <S.Span>비밀번호는 8자 이상이어야 합니다.</S.Span>}
 
         <S.BtnBox>
-          <S.Button type="submit" disabled={!canSubmit} data-testid="signup-button">
+          <S.Button type="submit" disabled={!canSubmit || isLoading} data-testid="signup-button">
             회원가입
           </S.Button>
           <Link to={'/signin'}>로그인</Link>

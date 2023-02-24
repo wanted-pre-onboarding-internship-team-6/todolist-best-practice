@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react';
+
+import { useMutation } from '../../../common/hooks';
 import { updateTodo, deleteTodo } from '../../apis';
 import { TODO_ACTION } from '../../constants';
 import { useTodo } from '../../hooks';
@@ -10,39 +12,53 @@ export default function TodoItem({ id, todo, isCompleted }) {
   const modifiedTodoRef = useRef(null);
   const completeTodoRef = useRef(null);
 
-  async function handleTodoComplete() {
-    const { isSuccess, data, error } = await updateTodo(id, todo, !isCompleted);
-
-    if (isSuccess) {
+  const { mutate: modify, isLoading: isModifying } = useMutation(updateTodo, {
+    onSuccess: data => {
+      setIsModifyMode(false);
       dispatch({ type: TODO_ACTION.update, newTodo: data });
-    } else if (error) {
-      alert(error.message);
+    },
+    onError: error => {
+      console.error(error);
+    },
+  });
+
+  const { mutate: complete, isLoading: isCompleting } = useMutation(updateTodo, {
+    onSuccess: data => {
+      dispatch({ type: TODO_ACTION.update, newTodo: data });
+    },
+    onError: error => {
+      console.error(error);
       completeTodoRef.current.checked = isCompleted;
-    }
+    },
+  });
+
+  const { mutate: remove, isLoading: isRemoving } = useMutation(deleteTodo, {
+    onSuccess: () => {
+      dispatch({ type: TODO_ACTION.delete, newTodo: { id } });
+    },
+    onError: error => {
+      console.error(error);
+    },
+  });
+
+  async function completeTodo() {
+    complete({ id, todo, isCompleted: !isCompleted });
   }
 
-  function handleModifyMode() {
+  function toggleModifyMode() {
     setIsModifyMode(isModifyMode => !isModifyMode);
   }
 
-  async function handleTodoModify() {
+  async function modifyTodo() {
     const modifiedTodo = modifiedTodoRef.current.value;
 
     if (!modifiedTodo) return;
 
-    const { isSuccess, data, error } = await updateTodo(id, modifiedTodo, isCompleted);
-
-    if (isSuccess) {
-      setIsModifyMode(false);
-      dispatch({ type: TODO_ACTION.update, newTodo: data });
-    } else if (error) alert(error.message);
+    modify({ id, todo: modifiedTodo, isCompleted });
   }
 
-  async function handleTodoDelete() {
-    const { isSuccess, error } = await deleteTodo(id);
-
-    if (isSuccess) dispatch({ type: TODO_ACTION.delete, newTodo: { id } });
-    else if (error) alert(error.message);
+  async function removeTodo() {
+    remove(id);
   }
 
   return (
@@ -57,10 +73,14 @@ export default function TodoItem({ id, todo, isCompleted }) {
               data-testid="modify-input"
             />
             <S.Box>
-              <S.Button onClick={handleTodoModify} data-testid="submit-button">
+              <S.Button onClick={modifyTodo} disabled={isModifying} data-testid="submit-button">
                 제출
               </S.Button>
-              <S.Button onClick={handleModifyMode} data-testid="cancel-button">
+              <S.Button
+                onClick={toggleModifyMode}
+                disabled={isModifying}
+                data-testid="cancel-button"
+              >
                 취소
               </S.Button>
             </S.Box>
@@ -72,16 +92,17 @@ export default function TodoItem({ id, todo, isCompleted }) {
                 type="checkbox"
                 ref={completeTodoRef}
                 defaultChecked={isCompleted}
-                onChange={handleTodoComplete}
+                onChange={completeTodo}
+                disabled={isCompleting}
                 className="checkbox"
               />
               <S.Span>{todo}</S.Span>
             </S.Label>
             <S.Box>
-              <S.Button onClick={handleModifyMode} data-testid="modify-button">
+              <S.Button onClick={toggleModifyMode} data-testid="modify-button">
                 수정
               </S.Button>
-              <S.Button data-testid="delete-button" onClick={handleTodoDelete}>
+              <S.Button data-testid="delete-button" disabled={isRemoving} onClick={removeTodo}>
                 삭제
               </S.Button>
             </S.Box>
