@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { useQuery } from '../../../common/hooks';
 import { getTodos } from '../../apis';
 import { TODO_ACTION } from '../../constants';
@@ -18,16 +16,6 @@ export default function TodoList() {
       console.error(error);
     },
   });
-
-  useEffect(() => {
-    (async () => {
-      const { isSuccess, data, error } = await getTodos();
-
-      if (isSuccess) {
-        dispatch({ type: TODO_ACTION.init, newTodo: data });
-      } else if (error) alert(error.message);
-    })();
-  }, [dispatch]);
 
   return (
     <S.Ul>
