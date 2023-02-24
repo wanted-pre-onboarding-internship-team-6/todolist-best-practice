@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
-
-import { useAuth } from '../../auth/hooks';
-import { AUTH_ACTION } from '../../auth/constants';
+import { useAuth } from '../../../auth/hooks';
+import { AUTH_ACTION } from '../../../auth/constants';
+import * as S from './styles';
 
 export default function NavBar() {
   const pages = ['signup', 'signin', 'todo'];
@@ -13,26 +13,26 @@ export default function NavBar() {
   }
 
   return (
-    <header className="header">
-      <nav>
-        <ul>
+    <S.Header>
+      <S.Nav>
+        <S.Ul>
           {pages.map(page => (
-            <li key={page}>
+            <S.Li key={page}>
               <NavLink
                 to={page}
                 className={({ isActive }) => (isActive ? 'current-path' : undefined)}
               >
                 {page}
               </NavLink>
-            </li>
+            </S.Li>
           ))}
-        </ul>
-      </nav>
+        </S.Ul>
+      </S.Nav>
       {isSignIn && (
-        <button type="button" onClick={signOut}>
+        <S.Button type="button" onClick={signOut}>
           signout
-        </button>
+        </S.Button>
       )}
-    </header>
+    </S.Header>
   );
 }

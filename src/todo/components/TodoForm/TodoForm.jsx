@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-
-import { createTodo } from '../apis';
-import { TODO_ACTION } from '../constants';
-import { useTodo } from '../hooks';
+import { createTodo } from '../../apis';
+import { TODO_ACTION } from '../../constants';
+import { useTodo } from '../../hooks';
+import * as S from './styles';
 
 export default function TodoForm() {
   const [, dispatch] = useTodo();
@@ -30,12 +30,12 @@ export default function TodoForm() {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="todo">할 일 작성</label>
-      <input id="todo" ref={todoInputRef} type="text" data-testid="new-todo-input" />
-      <button type="submit" data-testid="new-todo-add-button">
+    <S.Form onSubmit={handleSubmit}>
+      <S.Label htmlFor="todo">할 일 작성</S.Label>
+      <S.Input id="todo" ref={todoInputRef} type="text" data-testid="new-todo-input" />
+      <S.Button type="submit" data-testid="new-todo-add-button">
         추가
-      </button>
-    </form>
+      </S.Button>
+    </S.Form>
   );
 }

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-import { signIn } from '../apis';
-import { AUTH_ACTION } from '../constants';
-import { useAuth } from '../hooks';
+import { signIn } from '../../apis';
+import { AUTH_ACTION } from '../../constants';
+import { useAuth } from '../../hooks';
+import * as S from './styles';
 
 export default function SignInPage() {
   // useForm => 준석님
@@ -50,11 +50,11 @@ export default function SignInPage() {
   }, []);
 
   return (
-    <>
-      <h1>로그인</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">이메일</label>
-        <input
+    <S.Container>
+      <S.Title>로그인</S.Title>
+      <S.Form onSubmit={handleSubmit}>
+        <S.Label htmlFor="email">이메일</S.Label>
+        <S.Input
           id="email"
           type="text"
           ref={emailInputRef}
@@ -62,22 +62,25 @@ export default function SignInPage() {
           onChange={handleEmailInput}
           data-testid="email-input"
         />
-        {isEmailValid === false && <span>이메일 형식을 확인해주세요.</span>}
-
-        <label htmlFor="password">비밀번호</label>
-        <input
+        {isEmailValid === false && <S.Span>이메일 형식을 확인해주세요.</S.Span>}
+        <S.Div></S.Div>
+        <S.Label htmlFor="password">비밀번호</S.Label>
+        <S.Input
           id="password"
           type="password"
           value={password}
           onChange={handlePasswordInput}
           data-testid="password-input"
         />
-        {isPasswordValid === false && <span>비밀번호는 8자 이상이어야 합니다.</span>}
-        <button type="submit" disabled={!canSubmit} data-testid="signin-button">
-          로그인
-        </button>
-      </form>
-      <Link to={'/signup'}>회원가입</Link>
-    </>
+        {isPasswordValid === false && <S.Span>비밀번호는 8자 이상이어야 합니다.</S.Span>}
+
+        <S.BtnBox>
+          <S.Button type="submit" disabled={!canSubmit} data-testid="signin-button">
+            로그인
+          </S.Button>
+          <Link to={'/signup'}>회원가입</Link>
+        </S.BtnBox>
+      </S.Form>
+    </S.Container>
   );
 }

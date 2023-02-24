@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-
-import { getTodos } from '../apis';
-import { TODO_ACTION } from '../constants';
-import { useTodo } from '../hooks';
-import TodoItem from './TodoItem';
+import { getTodos } from '../../apis';
+import { TODO_ACTION } from '../../constants';
+import { useTodo } from '../../hooks';
+import TodoItem from '../TodoItem/TodoItem';
+import * as S from './styles';
 
 export default function TodoList() {
   const [todos, dispatch] = useTodo();
@@ -19,12 +19,12 @@ export default function TodoList() {
   }, [dispatch]);
 
   return (
-    <ul>
+    <S.Ul>
       {todos.length === 0 ? (
-        <li>할 일이 없습니다.</li>
+        <S.Li>할 일이 없습니다.</S.Li>
       ) : (
         todos.map(todo => <TodoItem key={todo.id} {...todo} />)
       )}
-    </ul>
+    </S.Ul>
   );
 }

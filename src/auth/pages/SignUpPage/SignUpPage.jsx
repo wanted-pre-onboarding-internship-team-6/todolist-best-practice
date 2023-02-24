@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-import { signUp } from '../apis';
+import { signUp } from '../../apis';
+import * as S from './styles';
 
 export default function SignUpPage() {
   // const [onChangehandler,value] = useForm(); // custom hook 처리(준석님) => 후순위
@@ -51,11 +51,11 @@ export default function SignUpPage() {
   }, []);
 
   return (
-    <>
-      <h1>회원가입</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">이메일</label>
-        <input
+    <S.Container>
+      <S.Title>회원가입</S.Title>
+      <S.Form onSubmit={handleSubmit}>
+        <S.Label htmlFor="email">이메일</S.Label>
+        <S.Input
           id="email"
           type="text"
           ref={emailInputRef}
@@ -63,23 +63,25 @@ export default function SignUpPage() {
           onChange={handleEmailInput}
           data-testid="email-input"
         />
-        {isEmailValid === false && <span>이메일 형식을 확인해주세요.</span>}
-
-        <label htmlFor="password">비밀번호</label>
-        <input
+        {isEmailValid === false && <>이메일 형식을 확인해주세요.</>}
+        <S.Div></S.Div>
+        <S.Label htmlFor="password">비밀번호</S.Label>
+        <S.Input
           id="password"
           type="password"
           value={password}
           onChange={handlePasswordInput}
           data-testid="password-input"
         />
-        {isPasswordValid === false && <span>비밀번호는 8자 이상이어야 합니다.</span>}
+        {isPasswordValid === false && <S.Span>비밀번호는 8자 이상이어야 합니다.</S.Span>}
 
-        <button type="submit" disabled={!canSubmit} data-testid="signup-button">
-          회원가입
-        </button>
-      </form>
-      <Link to={'/signin'}>로그인</Link>
-    </>
+        <S.BtnBox>
+          <S.Button type="submit" disabled={!canSubmit} data-testid="signup-button">
+            회원가입
+          </S.Button>
+          <Link to={'/signin'}>로그인</Link>
+        </S.BtnBox>
+      </S.Form>
+    </S.Container>
   );
 }
