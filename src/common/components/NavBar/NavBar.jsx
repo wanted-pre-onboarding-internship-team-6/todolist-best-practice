@@ -1,9 +1,15 @@
 import { NavLink } from 'react-router-dom';
+
 import { useAuth } from '../../../auth/hooks';
 import { AUTH_ACTION } from '../../../auth/constants';
 import * as S from './styles';
 
 export default function NavBar() {
+  const pageName = {
+    signup: '회원가입',
+    signin: '로그인',
+    todo: '할 일',
+  };
   const pages = ['signup', 'signin', 'todo'];
   const [{ isSignIn }, dispatch] = useAuth();
 
@@ -22,7 +28,7 @@ export default function NavBar() {
                 to={page}
                 className={({ isActive }) => (isActive ? 'current-path' : undefined)}
               >
-                {page}
+                {pageName[page]}
               </NavLink>
             </S.Li>
           ))}
@@ -30,7 +36,7 @@ export default function NavBar() {
       </S.Nav>
       {isSignIn && (
         <S.Button type="button" onClick={signOut}>
-          signout
+          로그아웃
         </S.Button>
       )}
     </S.Header>
